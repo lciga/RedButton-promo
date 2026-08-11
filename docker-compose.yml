@@ -1,0 +1,13 @@
+services:
+  promo:
+    build:
+      context: .
+      args:
+        VITE_TELEGRAM_URL: ${VITE_TELEGRAM_URL}
+
+    container_name: redbutton-promo
+
+    restart: unless-stopped
+
+    ports:
+      - "8080:80"

@@ -4,8 +4,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue"
 const MESSAGE =
   "Connection established. Мы наблюдаем. Если ты нашел это, значит умеешь замечать детали. Продолжай искать."
 
-// Замени на ссылку своего Telegram-канала.
-const TELEGRAM_URL = "https://t.me/utmnctf"
+const TELEGRAM_URL = import.meta.env.VITE_TELEGRAM_URL
 
 const displayedText = ref("")
 const typingFinished = ref(false)
@@ -28,13 +27,11 @@ function sleep(ms: number) {
 }
 
 async function typeMessage() {
-  // Небольшая задержка после загрузки страницы.
-  await sleep(1200)
+  await sleep(2000)
 
   for (let i = 0; i < MESSAGE.length; i++) {
     displayedText.value += MESSAGE[i]
 
-    // Пауза после знаков препинания.
     let delay = 35 + Math.random() * 55
 
     if (".,!?".includes(MESSAGE[i])) {
@@ -43,7 +40,6 @@ async function typeMessage() {
 
     await sleep(delay)
 
-    // Иногда во время набора случается короткий glitch.
     if (Math.random() < 0.025) {
       triggerSmallGlitch()
     }
@@ -53,7 +49,6 @@ async function typeMessage() {
 
   await sleep(900)
 
-  // Сильный glitch перед появлением кнопки.
   triggerHardGlitch()
 
   await sleep(850)
@@ -221,9 +216,6 @@ onBeforeUnmount(() => {
 </template>
 
 <style>
-/* ==========================
-   GLOBAL
-   ========================== */
 
 * {
   box-sizing: border-box;
@@ -243,10 +235,6 @@ body {
   overflow: hidden;
   background: #000;
 }
-
-/* ==========================
-   SCREEN
-   ========================== */
 
 .screen {
   --terminal-color: #b7ffb7;
@@ -283,10 +271,6 @@ body {
     filter 60ms linear,
     transform 60ms linear;
 }
-
-/* ==========================
-   TERMINAL
-   ========================== */
 
 .terminal {
   position: relative;
@@ -379,10 +363,6 @@ body {
     0 0 12px rgba(80, 255, 80, 0.12);
 }
 
-/* ==========================
-   CURSOR
-   ========================== */
-
 .cursor {
   display: inline-block;
 
@@ -412,10 +392,6 @@ body {
     opacity: 0;
   }
 }
-
-/* ==========================
-   TUI BUTTON
-   ========================== */
 
 .access-area {
   margin-top: 45px;
@@ -536,10 +512,6 @@ body {
   }
 }
 
-/* ==========================
-   BUTTON TRANSITION
-   ========================== */
-
 .button-appear-enter-active {
   animation: button-materialize 650ms steps(2, end);
 }
@@ -576,10 +548,6 @@ body {
     transform: translateX(0);
   }
 }
-
-/* ==========================
-   GLITCH
-   ========================== */
 
 .screen--glitch .terminal {
   animation: terminal-glitch 110ms steps(2, end);
@@ -637,8 +605,6 @@ body {
   }
 }
 
-/* Сильный glitch перед появлением ENTER */
-
 .screen--hard-glitch .terminal {
   animation: hard-glitch 600ms steps(1, end);
 }
@@ -691,10 +657,6 @@ body {
   }
 }
 
-/* ==========================
-   SCANLINES
-   ========================== */
-
 .scanlines {
   position: absolute;
   z-index: 20;
@@ -713,8 +675,6 @@ body {
 
   opacity: 0.55;
 }
-
-/* Бегущая светлая CRT-линия */
 
 .scanlines::after {
   content: "";
@@ -746,10 +706,6 @@ body {
     transform: translateY(calc(100vh + 200px));
   }
 }
-
-/* ==========================
-   NOISE
-   ========================== */
 
 .noise {
   position: absolute;
@@ -789,10 +745,6 @@ body {
   }
 }
 
-/* ==========================
-   VIGNETTE
-   ========================== */
-
 .vignette {
   position: absolute;
   z-index: 25;
@@ -808,10 +760,6 @@ body {
       rgba(0, 0, 0, 0.85) 100%
     );
 }
-
-/* ==========================
-   SCREEN FLASH
-   ========================== */
 
 .screen::after {
   content: "";
@@ -831,10 +779,6 @@ body {
   background: rgba(210, 255, 210, 0.08);
 }
 
-/* ==========================
-   BOTTOM STATUS
-   ========================== */
-
 .bottom-status {
   position: absolute;
   z-index: 6;
@@ -853,10 +797,6 @@ body {
 
   user-select: none;
 }
-
-/* ==========================
-   SLIGHT CRT FLICKER
-   ========================== */
 
 .screen {
   animation: crt-flicker 7s infinite;
@@ -880,10 +820,6 @@ body {
   }
 }
 
-/* ==========================
-   MOBILE
-   ========================== */
-
 @media (max-width: 600px) {
   .terminal {
     width: 92vw;
@@ -906,10 +842,6 @@ body {
   }
 }
 
-/*
-  Если пользователь попросил ОС уменьшить анимации,
-  не устраиваем ему эпилептический пиздец.
-*/
 @media (prefers-reduced-motion: reduce) {
   .noise,
   .scanlines::after,
