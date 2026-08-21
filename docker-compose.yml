@@ -4,6 +4,7 @@ services:
       context: .
       args:
         VITE_TELEGRAM_URL: ${VITE_TELEGRAM_URL}
+        VITE_VK_URL: ${VITE_VK_URL}
 
     container_name: redbutton-promo
 
